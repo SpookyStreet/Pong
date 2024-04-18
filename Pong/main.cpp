@@ -22,16 +22,108 @@ public: // public methods
 	void Update() {
 		x += speed_x;
 		y += speed_y;
+
+		if (y + radius >= GetScreenHeight() || y - radius <= 0)
+		{
+			speed_y *= -1;
+		}
+
+		if (x + radius >= GetScreenWidth() || x - radius <= 0 ) 
+		{
+			speed_x *= -1;
+		}
+	
 	}
 
-	Ball(float X, float Y, int SPEED_X, int SPEED_Y) {
+	Ball(float X, float Y, int SPEED_X, int SPEED_Y, int RADIUS) {
 		x = X;
 		y = Y;
 		speed_x = SPEED_X;
 		speed_y = SPEED_Y;
-		radius = 10;
+		radius = RADIUS;
 	}
 };
+
+
+class Paddle {
+public:
+
+	float x, y;
+	int width, height;
+	int speed_y;
+
+protected:
+	void LimitMovement() {
+		if (y <= 0)
+		{
+			y = 0;
+		}
+
+		if (y + height >= GetScreenHeight())
+		{
+			y = GetScreenHeight() - height;
+		}
+	}
+public:
+
+	void Draw() {
+		DrawRectangle(x,y,width,height, WHITE);
+	}
+
+	void Update() 
+	{
+		if (IsKeyDown(KEY_UP))
+		{
+			y -= speed_y;
+		}
+		if (IsKeyDown(KEY_DOWN))
+		{
+			y += speed_y;
+		}
+		LimitMovement();
+	}
+
+	Paddle(){}
+
+	Paddle(float X, float Y, int WIDTH, int HEIGHT,int SPEED_Y) {
+
+		width = WIDTH;
+		height = HEIGHT;
+		speed_y = SPEED_Y;
+		x = X;
+		y = Y;
+
+	}
+};
+
+class CpuPaddle : public Paddle {
+
+public:
+	
+	void Update(float ball_y) 
+	{
+		if (y + height / 2 > ball_y)
+		{
+			y -= speed_y;
+		}
+		
+		if (y + height / 2 <= ball_y)
+		{
+			y += speed_y;
+		}
+		LimitMovement();
+	}
+	
+	CpuPaddle(float X, float Y, int WIDTH, int HEIGHT, int SPEED_Y) {
+
+		width = WIDTH;
+		height = HEIGHT;
+		speed_y = SPEED_Y;
+		x = X;
+		y = Y;
+	}
+};
+
 
 int main()
 {
@@ -39,11 +131,17 @@ int main()
 	const int screen_height = 800;
 	
 	const int ball_radius = 10;
+	const float ball_speed_x = 5;
+	const float ball_speed_y = 5;
 	const int paddle_width = 20;
 	const int paddle_height = 100;
 	const int paddle_offset = 10;
+	const int paddle_speed = 6;
 
-	Ball ball(screen_width / 2,screen_height/2,5,5);
+
+	Ball ball(screen_width / 2, screen_height / 2, ball_speed_x, ball_speed_y, ball_radius);
+	Paddle player(screen_width - paddle_offset - paddle_width,screen_height/2 - paddle_height/2,paddle_width,paddle_height,paddle_speed);
+	CpuPaddle cpu(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, paddle_speed);
 
 	InitWindow(screen_width, screen_height, "Pong");
 	SetTargetFPS(60); // game to run at 60 FPS
@@ -55,14 +153,26 @@ int main()
 		
 		//Updating
 		ball.Update();
+		player.Update();
+		cpu.Update(ball.y);
+		
+		//Check for collision
+		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
+		{
+			ball.speed_x *= -1;
+		}
 
+		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
+		{
+			ball.speed_x *= -1;
+		}
 
 		//Drawing game objects
 		ClearBackground(BLACK);
 		DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
 		ball.Draw();
-		DrawRectangle(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, WHITE);
-		DrawRectangle(screen_width - paddle_width - paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, WHITE);
+		player.Draw();
+		cpu.Draw();
 		
 
 
