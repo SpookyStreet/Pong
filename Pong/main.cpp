@@ -2,6 +2,9 @@
 #include <raylib.h>
 #include "Pong.h"
 
+int player_score = 0;
+int cpu_score = 0; 
+
 class Ball {
 private: // private variables 
 
@@ -10,6 +13,7 @@ public:// public variables
 	float x, y;
 	int speed_x, speed_y;
 	int radius;
+	int speed_choices[2] = { -1,1 };
 
 private: // private methods
 
@@ -28,11 +32,26 @@ public: // public methods
 			speed_y *= -1;
 		}
 
-		if (x + radius >= GetScreenWidth() || x - radius <= 0 ) 
+		if (x + radius >= GetScreenWidth()) //cpu wins
 		{
-			speed_x *= -1;
+			cpu_score++;
+			Reset();
 		}
-	
+		
+		if (x - radius <= 0 ) // player wins
+		{
+			player_score++;
+			Reset();
+		}
+	}
+
+	void Reset() 
+	{
+		x = GetScreenWidth() / 2;
+		y = GetScreenHeight() / 2;
+
+		speed_x *= speed_choices[GetRandomValue(0, 1)];
+		speed_y *= speed_choices[GetRandomValue(0, 1)];
 	}
 
 	Ball(float X, float Y, int SPEED_X, int SPEED_Y, int RADIUS) {
@@ -173,8 +192,8 @@ int main()
 		ball.Draw();
 		player.Draw();
 		cpu.Draw();
-		
-
+		DrawText(TextFormat("%i",cpu_score), screen_width / 4 -20, 20, 80, WHITE);
+		DrawText(TextFormat("%i", player_score), 3*screen_width / 4 -20, 20, 80, WHITE);
 
 		//DrawFPS(10, 10); //displays FPS 
 		EndDrawing();
