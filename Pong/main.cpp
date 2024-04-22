@@ -26,7 +26,7 @@ public: // public methods
 		DrawCircle(x, y, radius, WHITE); //draws ball to window
 	}
 
-	void Update(Sound score) { // updates balls position based on speed
+	void Update(Sound score) { // updates balls position based on speed, takes sound input 
 		x += speed_x;
 		y += speed_y;
 
