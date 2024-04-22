@@ -156,17 +156,18 @@ int main()
 	
 	//parameters of game 
 	const int ball_radius = 10;
-	const float ball_speed_x = 5;
-	const float ball_speed_y = 5;
+	const float ball_speed_x = 10;
+	const float ball_speed_y = 9;
 	const int paddle_width = 20;
-	const int paddle_height = 100;
+	const int paddle_height = 120;
 	const int paddle_offset = 10;
-	const int paddle_speed = 6;
+	const int paddle_speed = 8;
+	const int paddle_speed_cpu = 8;
 
 	//constructing game objects
 	Ball ball(screen_width / 2, screen_height / 2, ball_speed_x, ball_speed_y, ball_radius);
 	Paddle player(screen_width - paddle_offset - paddle_width,screen_height/2 - paddle_height/2,paddle_width,paddle_height,paddle_speed);
-	CpuPaddle cpu(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, paddle_speed);
+	CpuPaddle cpu(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, paddle_speed_cpu);
 
 	//creating window
 	InitWindow(screen_width, screen_height, "Pong");
