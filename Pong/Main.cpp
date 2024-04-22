@@ -2,6 +2,7 @@
 #include <raylib.h>
 #include "Pong.h"
 
+// setting initial scores 
 int player_score = 0;
 int cpu_score = 0; 
 
