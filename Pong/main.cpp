@@ -6,6 +6,7 @@
 int player_score = 0;
 int cpu_score = 0; 
 
+
 class Ball {
 private: // private variables 
 
@@ -25,7 +26,7 @@ public: // public methods
 		DrawCircle(x, y, radius, WHITE); //draws ball to window
 	}
 
-	void Update() { // updates balls position based on speed
+	void Update(Sound score) { // updates balls position based on speed
 		x += speed_x;
 		y += speed_y;
 
@@ -37,12 +38,14 @@ public: // public methods
 		if (x + radius >= GetScreenWidth()) //cpu wins
 		{
 			cpu_score++;
+			PlaySound(score);
 			Reset();
 		}
 		
 		if (x - radius <= 0 ) // player wins
 		{
 			player_score++;
+			PlaySound(score);
 			Reset();
 		}
 	}
@@ -176,13 +179,19 @@ int main()
 	//randomises ball starting direction
 	ball.Reset();
 
+
+	InitAudioDevice();      // Initialize audio device
+
+	Sound fx_Pong = LoadSound("pong.wav"); // loads sound
+	Sound fx_Score = LoadSound("score.wav");
+
 	// game loop
 	while (WindowShouldClose() == false) 
 	{
 		BeginDrawing();	
 		
 		//Updating positions
-		ball.Update();
+		ball.Update(fx_Score);
 		player.Update();
 		cpu.Update(ball.y);
 		
@@ -190,13 +199,18 @@ int main()
 		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
 		{
 			ball.speed_x *= -1;
+			PlaySound(fx_Pong);
 		}
 
 		//Check for collision ball and cpu
 		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
 		{
 			ball.speed_x *= -1;
+			PlaySound(fx_Pong);
+
 		}
+		
+		
 
 		//Drawing game objects
 		ClearBackground(BLACK);
