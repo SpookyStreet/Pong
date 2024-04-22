@@ -172,6 +172,9 @@ int main()
 	InitWindow(screen_width, screen_height, "Pong");
 	SetTargetFPS(60); // game to run at 60 FPS
 
+	//randomises ball starting direction
+	ball.Reset();
+
 	// game loop
 	while (WindowShouldClose() == false) 
 	{
