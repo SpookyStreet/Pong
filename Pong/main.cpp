@@ -213,6 +213,8 @@ int main()
 
 	Sound fx_Pong = LoadSound("pong.wav"); // loads sound
 	Sound fx_Score = LoadSound("score.wav");
+	Sound fx_Button = LoadSound("button.wav");
+	Sound fx_Pog = LoadSound("pog.wav");
 
 	//menu
 	bool isInMenu = true;
@@ -245,12 +247,7 @@ int main()
 		//play button
 		if (CheckCollisionPointRec(mousePoint, play_bounds))
 		{
-			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-				play_state = 2;
-			}
-			else {
-				play_state = 1;
-			}
+			play_state = 1;
 
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
 				play_action = true;
@@ -263,20 +260,17 @@ int main()
 
 		if (play_action) 
 		{
+			PlaySound(fx_Button);
 			isInMenu = false;
 		}
 
 		// poggers button
 		if (CheckCollisionPointRec(mousePoint, pog_bounds))
 		{
-			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-				pog_state = 2;
-			}
-			else {
-				pog_state = 1;
-			}
+			pog_state = 1;
 
-			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) 
+			{
 				pog_action = true;
 				
 			}
@@ -292,8 +286,33 @@ int main()
 				pog_on = false;
 			}
 			else{
+				PlaySound(fx_Pog);
 				pog_on = true;
 			}
+		}
+
+		//reset button
+		if (CheckCollisionPointRec(mousePoint, reset_bounds))
+		{
+			reset_state = 1;
+
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+				reset_action = true;
+
+			}
+		}
+		else
+		{
+			reset_state = 0;
+		}
+
+		if (reset_action)
+		{
+			PlaySound(fx_Button);
+			player_score = 0;
+			cpu_score = 0;
+			ball.Reset();
+			pog_on = false;
 		}
 
 		//menu return
@@ -310,33 +329,7 @@ int main()
 			}
 		}
 
-		//reset button
-		if (CheckCollisionPointRec(mousePoint, reset_bounds))
-		{
-			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-				reset_state = 2;
-			}
-			else {
-				reset_state = 1;
-			}
 
-			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-				reset_action = true;
-
-			}
-		}
-		else
-		{
-			reset_state = 0;
-		}
-
-		if (reset_action)
-		{
-			player_score = 0;
-			cpu_score = 0;
-			ball.Reset();
-			pog_on = false;
-		}
 
 
 		BeginDrawing();	
