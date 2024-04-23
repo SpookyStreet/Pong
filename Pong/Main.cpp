@@ -213,7 +213,7 @@ int main()
 	//menu
 	bool isInMenu = true;
 	int button_height = 100;
-	int button_height = 100;
+	int button_width = 400;
 
 	// game loop
 	while (WindowShouldClose() == false) 
@@ -240,12 +240,16 @@ int main()
 			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
 			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
 			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
-			int tite_size = MeasureText("Ponggers Brother!",80);
-			DrawText("Ponggers Brother!", (screen_width-tite_size)/2 ,20, 80, WHITE);
-			DrawRectangle((screen_width-200) / 2, screen_height/4, 200 ,100, WHITE);
-			DrawRectangle((screen_width - 200) / 2, screen_height / 2, 200, 100, WHITE);
-			DrawRectangle((screen_width - 200) / 2, 3*screen_height / 4, 200, 100, WHITE);
-
+			DrawText("Ponggers Brother!!", (screen_width- MeasureText("Ponggers Brother!!", 80))/2 ,20, 80, WHITE);
+			DrawText("space to toggle menu", 20,screen_height - 40, 20, WHITE);
+			DrawRectangle((screen_width- button_width) / 2, (screen_height-button_height) /3, button_width, button_height, WHITE);
+			DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height, WHITE);
+			DrawRectangle((screen_width - button_width) / 2, 2*(screen_height - button_height) / 3, button_width, button_height, WHITE);
+			
+			
+			DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 +10, 80, Purple);
+			DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
+			DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2*(screen_height - button_height) / 3 + 10, 80, Purple);
 
 		}
 		else
