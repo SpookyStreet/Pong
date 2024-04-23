@@ -12,16 +12,15 @@ Color Light_Purple = Color{ 180, 150, 235,255 };
 
 
 class Ball {
-private: // private variables 
 
 public:// public variables 
 
 	float x, y; // ball position
-	int speed_x, speed_y; //ball speeds
+	float speed_x, speed_y; //ball speeds
 	int radius; //size of ball
 	int speed_choices[2] = { -1,1 }; //array for random initial direction
-
-private: // private methods
+	float init_speed_x;
+	float init_speed_y;
 
 public: // public methods
 
@@ -59,6 +58,9 @@ public: // public methods
 		x = GetScreenWidth() / 2;
 		y = GetScreenHeight() / 2;
 
+		speed_x = init_speed_x;
+		speed_y = init_speed_y;
+
 		speed_x *= speed_choices[GetRandomValue(0, 1)];
 		speed_y *= speed_choices[GetRandomValue(0, 1)];
 	}
@@ -68,6 +70,8 @@ public: // public methods
 		y = Y;
 		speed_x = SPEED_X;
 		speed_y = SPEED_Y;
+		init_speed_x = SPEED_X;
+		init_speed_y = SPEED_Y;
 		radius = RADIUS;
 	}
 };
@@ -163,8 +167,8 @@ int main()
 	
 	//parameters of game 
 	const int ball_radius = 10;
-	const float ball_speed_x = 10;
-	const float ball_speed_y = 9;
+	const float ball_speed_x = 10.0f;
+	const float ball_speed_y = 9.0f;
 	const int paddle_width = 20;
 	const int paddle_height = 120;
 	const int paddle_offset = 10;
@@ -202,14 +206,14 @@ int main()
 		//Check for collision ball and player
 		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
 		{
-			ball.speed_x *= -1;
+			ball.speed_x *= -1.1f;
 			PlaySound(fx_Pong);
 		}
 
 		//Check for collision ball and cpu
 		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
 		{
-			ball.speed_x *= -1;
+			ball.speed_x *= -1.1f;
 			PlaySound(fx_Pong);
 
 		}
