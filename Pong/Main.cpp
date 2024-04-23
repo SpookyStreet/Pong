@@ -26,14 +26,14 @@ public:// public variables
 
 public: // public methods
 
-	void Draw(Texture ball_texture,bool pog_on_off) 
+	void Draw(Texture texture,bool pog_on_off) 
 	{
 		Vector2 pos = { x-25,y-25};
 		if (pog_on_off)
 		{
 			rotation += rotation_speed;
-			DrawTextureEx(ball_texture, pos,rotation,1, RAYWHITE);
-			DrawCircle(x, y, radius, WHITE);//draws ball to window
+			DrawTextureEx(texture, pos,rotation,1, RAYWHITE);
+			//DrawCircle(x, y, radius, WHITE);//test image location relative to hitbox
 		}
 		else 
 		{
@@ -85,8 +85,8 @@ public: // public methods
 		init_speed_x = SPEED_X;
 		init_speed_y = SPEED_Y;
 		radius = RADIUS;
-		rotation = 0;// rotation turned off 
-		rotation_speed = 0;
+		rotation = 0;
+		rotation_speed = 0; // rotation off
 	}
 };
 
@@ -203,7 +203,6 @@ int main()
 
 	Image Poggers = LoadImage("Poggers.png");
 	ImageResize(&Poggers, 50, 50);
-	ImageRotate(&Poggers, 90);
 	Texture2D texture = LoadTextureFromImage(Poggers);
 
 	
