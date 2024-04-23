@@ -1,6 +1,6 @@
 #include <iostream>
 #include <raylib.h>
-
+#include <cmath>
 
 // setting initial scores 
 int player_score = 0;
@@ -21,12 +21,24 @@ public:// public variables
 	int speed_choices[2] = { -1,1 }; //array for random initial direction
 	float init_speed_x;
 	float init_speed_y;
+	int rotation;
+	int rotation_speed;
 
 public: // public methods
 
-	void Draw() 
+	void Draw(Texture ball_texture,bool pog_on_off) 
 	{
-		DrawCircle(x, y, radius, WHITE); //draws ball to window
+		Vector2 pos = { x-25,y-25};
+		if (pog_on_off)
+		{
+			rotation += rotation_speed;
+			DrawTextureEx(ball_texture, pos,rotation,1, RAYWHITE);
+			DrawCircle(x, y, radius, WHITE);//draws ball to window
+		}
+		else 
+		{
+			DrawCircle(x, y, radius, WHITE);//draws ball to window
+		}
 	}
 
 	void Update(Sound score) { // updates balls position based on speed, takes sound input 
@@ -73,6 +85,8 @@ public: // public methods
 		init_speed_x = SPEED_X;
 		init_speed_y = SPEED_Y;
 		radius = RADIUS;
+		rotation = 0;// rotation turned off 
+		rotation_speed = 0;
 	}
 };
 
@@ -187,6 +201,13 @@ int main()
 	//randomises ball starting direction
 	ball.Reset();
 
+	Image Poggers = LoadImage("Poggers.png");
+	ImageResize(&Poggers, 50, 50);
+	ImageRotate(&Poggers, 90);
+	Texture2D texture = LoadTextureFromImage(Poggers);
+
+	
+	
 
 	InitAudioDevice();      // Initialize audio device
 
@@ -225,7 +246,7 @@ int main()
 		DrawRectangle(screen_width/2,0,screen_width/2,screen_height,Purple);
 		DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
 		DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
-		ball.Draw();
+		ball.Draw(texture,1);
 		player.Draw();
 		cpu.Draw();
 		DrawText(TextFormat("%i",cpu_score), screen_width / 4 -20, 20, 80, WHITE);
