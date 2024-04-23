@@ -405,7 +405,7 @@ int main()
 			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
 			{
 				ball.speed_x *= -1.1f;
-				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+				//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 				PlaySound(fx_Pong);
 
 			}
