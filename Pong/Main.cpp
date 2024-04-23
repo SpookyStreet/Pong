@@ -205,6 +205,10 @@ int main()
 	ImageResize(&Poggers, 50, 50);
 	Texture2D texture = LoadTextureFromImage(Poggers);
 
+	Image Poggers_menu = LoadImage("Poggers.png");
+	ImageResize(&Poggers_menu, 300, 300);
+	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
+
 	InitAudioDevice();      // Initialize audio device
 
 	Sound fx_Pong = LoadSound("pong.wav"); // loads sound
@@ -212,13 +216,87 @@ int main()
 
 	//menu
 	bool isInMenu = true;
+	
 	int button_height = 100;
 	int button_width = 400;
+	int play_state = 0; // 0 normal, 1 hover, 2 pressed
+	bool play_action = false;
+	int pog_state = 0; // 0 normal, 1 hover, 2 pressed
+	bool pog_action = false;
+	int reset_state = 0; // 0 normal, 1 hover, 2 pressed
+	bool reset_action = false;
+
+	bool pog_on = false;
+
+	Rectangle play_bounds = { (screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height };
+	Rectangle pog_bounds = { (screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height };
+	Rectangle reset_bounds = { (screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height };
+	Vector2  mousePoint = { 0.0f,0.0f };
 
 	// game loop
 	while (WindowShouldClose() == false) 
 	{
 		
+		mousePoint = GetMousePosition();
+		bool play_action = false;
+		bool pog_action = false;
+		bool reset_action = false;
+
+		//play button
+		if (CheckCollisionPointRec(mousePoint, play_bounds))
+		{
+			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+				play_state = 2;
+			}
+			else {
+				play_state = 1;
+			}
+
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+				play_action = true;
+			}
+		}
+		else
+		{
+			play_state = 0;
+		}
+
+		if (play_action) 
+		{
+			isInMenu = false;
+		}
+
+		// poggers button
+		if (CheckCollisionPointRec(mousePoint, pog_bounds))
+		{
+			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+				pog_state = 2;
+			}
+			else {
+				pog_state = 1;
+			}
+
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+				pog_action = true;
+				
+			}
+		}
+		else
+		{
+			pog_state = 0;
+		}
+
+		if (pog_action)
+		{
+			if (pog_on) {
+				pog_on = false;
+			}
+			else{
+				pog_on = true;
+			}
+		}
+
+		//menu return
 		if (isInMenu)
 		{
 			if (IsKeyPressed(KEY_SPACE)) {
@@ -231,7 +309,36 @@ int main()
 				isInMenu = true;
 			}
 		}
-		
+
+		//reset button
+		if (CheckCollisionPointRec(mousePoint, reset_bounds))
+		{
+			if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+				reset_state = 2;
+			}
+			else {
+				reset_state = 1;
+			}
+
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+				reset_action = true;
+
+			}
+		}
+		else
+		{
+			reset_state = 0;
+		}
+
+		if (reset_action)
+		{
+			player_score = 0;
+			cpu_score = 0;
+			ball.Reset();
+			pog_on = false;
+		}
+
+
 		BeginDrawing();	
 		
 		if (isInMenu) 
@@ -242,14 +349,46 @@ int main()
 			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
 			DrawText("Ponggers Brother!!", (screen_width- MeasureText("Ponggers Brother!!", 80))/2 ,20, 80, WHITE);
 			DrawText("space to toggle menu", 20,screen_height - 40, 20, WHITE);
-			DrawRectangle((screen_width- button_width) / 2, (screen_height-button_height) /3, button_width, button_height, WHITE);
-			DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height, WHITE);
-			DrawRectangle((screen_width - button_width) / 2, 2*(screen_height - button_height) / 3, button_width, button_height, WHITE);
 			
 			
-			DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 +10, 80, Purple);
-			DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
-			DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2*(screen_height - button_height) / 3 + 10, 80, Purple);
+			if (play_state)
+			{
+				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height, BLACK);
+				DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 + 10, 80, Purple);
+			}
+			else
+			{
+				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height, WHITE);
+				DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 + 10, 80, Purple);
+			}
+
+			if (pog_state)
+			{
+				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height, BLACK);
+				DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
+			}
+			else 
+			{
+				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height, WHITE);
+				DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
+			}
+
+			if (reset_state)
+			{
+				DrawRectangle((screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height, BLACK);
+				DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2 * (screen_height - button_height) / 3 + 10, 80, Purple);
+			}
+			else
+			{
+				DrawRectangle((screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height, WHITE);
+				DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2 * (screen_height - button_height) / 3 + 10, 80, Purple);
+			}
+
+			if (pog_on) {
+				DrawTexture(texture_menu, screen_width / 6-150, screen_height / 2-150,WHITE);
+				DrawTexture(texture_menu, 5*screen_width / 6 - 150, screen_height / 2 - 150, WHITE);
+			}
+
 
 		}
 		else
@@ -282,7 +421,7 @@ int main()
 			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
 			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
 			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
-			ball.Draw(texture, 1);
+			ball.Draw(texture, pog_on);
 			player.Draw();
 			cpu.Draw();
 			DrawText(TextFormat("%i", cpu_score), screen_width / 4 - 20, 20, 80, WHITE);
