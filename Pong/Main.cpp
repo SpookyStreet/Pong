@@ -19,6 +19,7 @@ public:// public variables
 	float speed_x, speed_y; //ball speeds
 	int radius; //size of ball
 	int speed_choices[2] = { -1,1 }; //array for random initial direction
+	float speed_y_bounce[2] = { 1,1.1 };
 	float init_speed_x;
 	float init_speed_y;
 	int rotation;
@@ -396,6 +397,7 @@ int main()
 			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
 			{
 				ball.speed_x *= -1.1f;
+				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 				PlaySound(fx_Pong);
 			}
 
@@ -403,6 +405,7 @@ int main()
 			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
 			{
 				ball.speed_x *= -1.1f;
+				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 				PlaySound(fx_Pong);
 
 			}
