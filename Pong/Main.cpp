@@ -6,6 +6,10 @@
 int player_score = 0;
 int cpu_score = 0; 
 
+Color Purple = Color{ 145, 70, 255,255 };
+Color Dark_Purple = Color{ 135, 31, 235,255 };
+Color Light_Purple = Color{ 180, 150, 235,255 };
+
 
 class Ball {
 private: // private variables 
@@ -93,7 +97,7 @@ public:
 
 	void Draw() // draws paddle to window
 	{
-		DrawRectangle(x,y,width,height, WHITE);
+		DrawRectangleRounded(Rectangle{x,y,float(width),float(height)},0.6,10,WHITE);
 	}
 
 	void Update() // updates paddles new position 
@@ -213,7 +217,9 @@ int main()
 		
 
 		//Drawing game objects
-		ClearBackground(BLACK);
+		ClearBackground(Dark_Purple);
+		DrawRectangle(screen_width/2,0,screen_width/2,screen_height,Purple);
+		DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
 		DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
 		ball.Draw();
 		player.Draw();
