@@ -205,52 +205,85 @@ int main()
 	ImageResize(&Poggers, 50, 50);
 	Texture2D texture = LoadTextureFromImage(Poggers);
 
-	
-	
-
 	InitAudioDevice();      // Initialize audio device
 
 	Sound fx_Pong = LoadSound("pong.wav"); // loads sound
 	Sound fx_Score = LoadSound("score.wav");
 
+	//menu
+	bool isInMenu = true;
+	int button_height = 100;
+	int button_height = 100;
+
 	// game loop
 	while (WindowShouldClose() == false) 
 	{
+		
+		if (isInMenu)
+		{
+			if (IsKeyPressed(KEY_SPACE)) {
+				isInMenu = false;
+			}
+		}
+		else
+		{
+			if (IsKeyPressed(KEY_SPACE)) {
+				isInMenu = true;
+			}
+		}
+		
 		BeginDrawing();	
 		
-		//Updating positions
-		ball.Update(fx_Score);
-		player.Update();
-		cpu.Update(ball.y);
-		
-		//Check for collision ball and player
-		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
+		if (isInMenu) 
 		{
-			ball.speed_x *= -1.1f;
-			PlaySound(fx_Pong);
-		}
+			ClearBackground(Dark_Purple);
+			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
+			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
+			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
+			int tite_size = MeasureText("Ponggers Brother!",80);
+			DrawText("Ponggers Brother!", (screen_width-tite_size)/2 ,20, 80, WHITE);
+			DrawRectangle((screen_width-200) / 2, screen_height/4, 200 ,100, WHITE);
+			DrawRectangle((screen_width - 200) / 2, screen_height / 2, 200, 100, WHITE);
+			DrawRectangle((screen_width - 200) / 2, 3*screen_height / 4, 200, 100, WHITE);
 
-		//Check for collision ball and cpu
-		if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
-		{
-			ball.speed_x *= -1.1f;
-			PlaySound(fx_Pong);
 
 		}
-		
-		
+		else
+		{
 
-		//Drawing game objects
-		ClearBackground(Dark_Purple);
-		DrawRectangle(screen_width/2,0,screen_width/2,screen_height,Purple);
-		DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
-		DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
-		ball.Draw(texture,1);
-		player.Draw();
-		cpu.Draw();
-		DrawText(TextFormat("%i",cpu_score), screen_width / 4 -20, 20, 80, WHITE);
-		DrawText(TextFormat("%i", player_score), 3*screen_width / 4 -20, 20, 80, WHITE);
+			//Updating positions
+			ball.Update(fx_Score);
+			player.Update();
+			cpu.Update(ball.y);
 
+			//Check for collision ball and player
+			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
+			{
+				ball.speed_x *= -1.1f;
+				PlaySound(fx_Pong);
+			}
+
+			//Check for collision ball and cpu
+			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
+			{
+				ball.speed_x *= -1.1f;
+				PlaySound(fx_Pong);
+
+			}
+
+
+
+			//Drawing game objects
+			ClearBackground(Dark_Purple);
+			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
+			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
+			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
+			ball.Draw(texture, 1);
+			player.Draw();
+			cpu.Draw();
+			DrawText(TextFormat("%i", cpu_score), screen_width / 4 - 20, 20, 80, WHITE);
+			DrawText(TextFormat("%i", player_score), 3 * screen_width / 4 - 20, 20, 80, WHITE);
+		}
 		//DrawFPS(10, 10); //displays FPS 
 		EndDrawing();
 	}
