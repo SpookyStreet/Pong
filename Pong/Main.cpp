@@ -25,6 +25,7 @@ public:// public variables
 	float init_speed_y;
 	float rotation;
 	int rotation_speed;
+	float rotation_multiply [6] = { -0.9,-1,-1.1,0.9,1,1.1 };
 
 public: // public methods
 
@@ -33,7 +34,7 @@ public: // public methods
 		Vector2 pos = { x-25,y-25}; // maps texture to the centre of the ball
 		if (pog_on_off)
 		{
-			rotation += rotation_speed;
+			
 			DrawTexturePro(texture, { 0,0,50,50},{x,y,50,50},{25,25}, rotation, RAYWHITE);//Draws texture to window
 			//DrawCircle(x, y, radius, WHITE);//test image location relative to hitbox
 		}
@@ -46,6 +47,7 @@ public: // public methods
 	void Update(Sound score) { // updates balls position based on speed, takes sound input 
 		x += speed_x;
 		y += speed_y;
+		rotation += rotation_speed;
 
 		if (y + radius >= GetScreenHeight() || y - radius <= 0) //bouncing off walls
 		{
@@ -77,6 +79,9 @@ public: // public methods
 
 		speed_x *= speed_choices[GetRandomValue(0, 1)];
 		speed_y *= speed_choices[GetRandomValue(0, 1)];
+
+		rotation = 0;
+		rotation_speed = 10;
 	}
 
 	Ball(float X, float Y, int SPEED_X, int SPEED_Y, int RADIUS) { // constructor for ball class
@@ -517,6 +522,7 @@ int main()
 			{
 				ball.speed_x *= -1.1f;
 				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+				ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 				PlaySound(fx_Pong);
 			}
 
@@ -529,6 +535,7 @@ int main()
 				{
 					ball.speed_x *= -1.1f;
 					//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+					ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 					PlaySound(fx_Pong);
 
 				}
@@ -540,6 +547,7 @@ int main()
 				{
 					ball.speed_x *= -1.1f;
 					ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+					ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 					PlaySound(fx_Pong);
 
 				}
