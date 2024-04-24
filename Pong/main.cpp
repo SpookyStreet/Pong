@@ -133,7 +133,13 @@ public:
 		LimitMovement();
 	}
 
-	Paddle(){} // needed for CPU subclass 
+	Paddle(){
+		width = 0;
+		height = 0;
+		speed_y = 0;
+		x = 0;
+		y = 0;
+	} // needed for CPU & player_2 subclasses
 
 	Paddle(float X, float Y, int WIDTH, int HEIGHT,int SPEED_Y) { //constructor 
 
