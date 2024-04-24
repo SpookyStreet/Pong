@@ -9,6 +9,7 @@ int cpu_score = 0;
 Color Purple = Color{ 145, 70, 255,255 };
 Color Dark_Purple = Color{ 135, 31, 235,255 };
 Color Light_Purple = Color{ 180, 150, 235,255 };
+Color Yellow = Color{255,255,0, 255};
 
 
 class Ball {
@@ -38,7 +39,7 @@ public: // public methods
 		}
 		else 
 		{
-			DrawCircle(x, y, radius, WHITE);//draws ball to window
+			DrawCircle(x, y, radius, Yellow);//draws ball to window
 		}
 	}
 
@@ -208,7 +209,7 @@ int main()
 	const int screen_height = 800;
 	
 	//parameters of game 
-	const int ball_radius = 10;
+	const int ball_radius = 15;
 	const float ball_speed_x = 10.0f;
 	const float ball_speed_y = 9.0f;
 	const int paddle_width = 20;
@@ -350,6 +351,9 @@ int main()
 			cpu_score = 0;
 			ball.Reset();
 			pog_on = false;
+			player.y = (screen_height - player.height) / 2;
+			cpu.y = (screen_height - cpu.height) / 2;
+			player_2.y = (screen_height - player_2.height) / 2;
 		}
 		
 		// multiplayer button
@@ -376,10 +380,15 @@ int main()
 			if (multiplayer_off) {
 				multiplayer_off = false;
 				PlaySound(fx_Pog);
+				player.y = (screen_height -player.height) / 2;
+				player_2.y = (screen_height - player_2.height) / 2;
 			}
 			else {
 				PlaySound(fx_Button);
 				multiplayer_off = true;
+				player.y = (screen_height - player.height) / 2;
+				cpu.y = (screen_height - cpu.height) / 2;
+
 			}
 		}
 
