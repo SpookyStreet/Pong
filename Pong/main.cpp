@@ -13,9 +13,7 @@ Color Yellow = Color{255,255,0, 255};
 
 // class to store methods and member varibles for the ball
 class Ball {
-
 public:// public variables 
-
 	float x, y; // ball position
 	float speed_x, speed_y; //ball speeds
 	int radius; //size of ball
@@ -100,7 +98,6 @@ public: // public methods
 
 class Paddle { //player paddle
 public:
-
 	float x, y; // position
 	int width, height; //size of paddle
 	int speed_y; //speed of paddle
@@ -119,7 +116,6 @@ protected:
 		}
 	}
 public:
-
 	void Draw() // draws paddle to window
 	{
 		DrawRectangleRounded(Rectangle{x,y,float(width),float(height)},0.6,10,WHITE);
@@ -158,9 +154,7 @@ public:
 };
 
 class CpuPaddle : public Paddle { // subclass CPU paddle
-
 public:
-	
 	void Update(float ball_y)  // AI position controls 
 	{
 		if (y + height / 2 > ball_y) // currently tracks ball y position
@@ -186,9 +180,7 @@ public:
 };
 
 class Paddle_Player_2 : public Paddle { // subclass for player 2
-
 public:
-
 	void Update() // updates paddles new position 
 	{
 		if (IsKeyDown(KEY_W))
@@ -203,7 +195,6 @@ public:
 	}
 
 	Paddle_Player_2(float X, float Y, int WIDTH, int HEIGHT, int SPEED_Y) {
-
 		width = WIDTH;
 		height = HEIGHT;
 		speed_y = SPEED_Y;
@@ -270,7 +261,6 @@ int main()
 	bool reset_action = false;
 	int multiplayer_state = 0; // 0 normal, 1 hover
 	bool multiplayer_action = false;
-
 
 	bool pog_on = false;
 	
@@ -417,13 +407,11 @@ int main()
 			}
 		}
 
-
-
-
 		BeginDrawing();	
 		
 		if (isInMenu) 
 		{
+			//drawing menu assets 
 			ClearBackground(Dark_Purple);
 			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
 			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
@@ -433,7 +421,7 @@ int main()
 			DrawText("Player 1 keys: up & down", screen_width - 300, screen_height - 80, 20, WHITE);
 			DrawText("Player 2 keys: w & s", screen_width - 300, screen_height - 40, 20, WHITE);
 			
-			
+			//Buttons 
 			if (play_state)
 			{
 				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height, BLACK);
@@ -466,7 +454,6 @@ int main()
 				DrawRectangle((screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height, WHITE);
 				DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2 * (screen_height - button_height) / 3 + 10, 80, Purple);
 			}
-
 			if (multiplayer_off) {
 				if (multiplayer_state)
 				{
@@ -491,8 +478,6 @@ int main()
 					DrawText("CPU", (screen_width - MeasureText("CPU", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 				}
 			}
-
-
 			if (pog_on) {
 
 				DrawTexture(texture_menu, 5 * screen_width / 6 - 150, screen_height / 2 - 150, WHITE);
@@ -521,12 +506,10 @@ int main()
 			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
 			{
 				ball.speed_x *= -1.1f;
-				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+				//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 				ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 				PlaySound(fx_Pong);
 			}
-
-			///////
 
 			if (multiplayer_off) 
 			{
@@ -546,14 +529,12 @@ int main()
 				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player_2.x,player_2.y,float(player_2.width),float(player_2.height) }))
 				{
 					ball.speed_x *= -1.1f;
-					ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+					//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 					ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 					PlaySound(fx_Pong);
 
 				}
 			}
-
-			//////
 
 			//Drawing game objects
 			ClearBackground(Dark_Purple);
@@ -567,7 +548,7 @@ int main()
 			player.Draw();
 				
 			if (multiplayer_off) {
-				cpu.Draw();///////////
+				cpu.Draw();
 			}
 			else
 			{
@@ -577,6 +558,5 @@ int main()
 		//DrawFPS(10, 10); //displays FPS 
 		EndDrawing();
 	}
-
 	CloseWindow();
 }
