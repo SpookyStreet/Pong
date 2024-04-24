@@ -485,23 +485,30 @@ int main()
 		}
 		else
 		{
-			if (multiplayer_off)
-			{
+			//Updating positions
+			ball.Update(fx_Score);
+			player.Update();
 
-
-				//Updating positions
-				ball.Update(fx_Score);
-				player.Update();
+			if (multiplayer_off) {
 				cpu.Update(ball.y);
+			}
+			else
+			{
+				player_2.Update();
+			}
 
-				//Check for collision ball and player
-				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
-				{
-					ball.speed_x *= -1.1f;
-					ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
-					PlaySound(fx_Pong);
-				}
+			//Check for collision ball and player
+			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
+			{
+				ball.speed_x *= -1.1f;
+				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+				PlaySound(fx_Pong);
+			}
 
+			///////
+
+			if (multiplayer_off) 
+			{
 				//Check for collision ball and cpu
 				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
 				{
@@ -510,35 +517,9 @@ int main()
 					PlaySound(fx_Pong);
 
 				}
-
-
-
-				//Drawing game objects
-				ClearBackground(Dark_Purple);
-				DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
-				DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
-				DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
-				ball.Draw(texture, pog_on);
-				player.Draw();
-				cpu.Draw();
-				DrawText(TextFormat("%i", cpu_score), screen_width / 4 - 20, 20, 80, WHITE);
-				DrawText(TextFormat("%i", player_score), 3 * screen_width / 4 - 20, 20, 80, WHITE);
 			}
 			else
 			{
-				//Updating positions
-				ball.Update(fx_Score);
-				player.Update();
-				player_2.Update();
-
-				//Check for collision ball and player
-				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
-				{
-					ball.speed_x *= -1.1f;
-					ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
-					PlaySound(fx_Pong);
-				}
-
 				//Check for collision ball and player_2
 				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player_2.x,player_2.y,float(player_2.width),float(player_2.height) }))
 				{
@@ -547,19 +528,27 @@ int main()
 					PlaySound(fx_Pong);
 
 				}
+			}
 
+			//////
 
+			//Drawing game objects
+			ClearBackground(Dark_Purple);
+			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
+			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
+			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
+			DrawText(TextFormat("%i", cpu_score), screen_width / 4 - 20, 20, 80, WHITE);
+			DrawText(TextFormat("%i", player_score), 3 * screen_width / 4 - 20, 20, 80, WHITE);
 
-				//Drawing game objects
-				ClearBackground(Dark_Purple);
-				DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
-				DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
-				DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
-				ball.Draw(texture, pog_on);
-				player.Draw();
+			ball.Draw(texture, pog_on);
+			player.Draw();
+				
+			if (multiplayer_off) {
+				cpu.Draw();///////////
+			}
+			else
+			{
 				player_2.Draw();
-				DrawText(TextFormat("%i", cpu_score), screen_width / 4 - 20, 20, 80, WHITE);
-				DrawText(TextFormat("%i", player_score), 3 * screen_width / 4 - 20, 20, 80, WHITE);
 			}
 		}
 		//DrawFPS(10, 10); //displays FPS 
