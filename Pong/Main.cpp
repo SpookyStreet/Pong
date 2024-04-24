@@ -1,17 +1,17 @@
 #include <iostream>
 #include <raylib.h>
-#include <cmath>
 
 // setting initial scores 
 int player_score = 0;
 int cpu_score = 0; 
 
+// defining colours to be used
 Color Purple = Color{ 145, 70, 255,255 };
 Color Dark_Purple = Color{ 135, 31, 235,255 };
 Color Light_Purple = Color{ 180, 150, 235,255 };
 Color Yellow = Color{255,255,0, 255};
 
-
+// class to store methods and member varibles for the ball
 class Ball {
 
 public:// public variables 
@@ -23,18 +23,18 @@ public:// public variables
 	float speed_y_bounce[2] = { 1,1.1 };
 	float init_speed_x;
 	float init_speed_y;
-	int rotation;
+	float rotation;
 	int rotation_speed;
 
 public: // public methods
 
 	void Draw(Texture texture,bool pog_on_off) 
 	{
-		Vector2 pos = { x-25,y-25};
+		Vector2 pos = { x-25,y-25}; // maps texture to the centre of the ball
 		if (pog_on_off)
 		{
 			rotation += rotation_speed;
-			DrawTextureEx(texture, pos,rotation,1, RAYWHITE);
+			DrawTexturePro(texture, { 0,0,50,50},{x,y,50,50},{25,25}, rotation, RAYWHITE);//Draws texture to window
 			//DrawCircle(x, y, radius, WHITE);//test image location relative to hitbox
 		}
 		else 
@@ -88,7 +88,7 @@ public: // public methods
 		init_speed_y = SPEED_Y;
 		radius = RADIUS;
 		rotation = 0;
-		rotation_speed = 0; // rotation off
+		rotation_speed = 10; // rotation off
 	}
 };
 
@@ -139,7 +139,7 @@ public:
 		speed_y = 0;
 		x = 0;
 		y = 0;
-	} // needed for CPU & player_2 subclasses
+	} //default constructor needed for CPU & player_2 subclasses
 
 	Paddle(float X, float Y, int WIDTH, int HEIGHT,int SPEED_Y) { //constructor 
 
