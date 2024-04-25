@@ -230,11 +230,11 @@ int main()
 	ball.Reset();
 
 	//loading textures
-	Image Poggers = LoadImage("panda_poggers.png");
+	Image Poggers = LoadImage("Graphics/panda_poggers.png");
 	ImageResize(&Poggers, 50, 50);
 	Texture2D texture = LoadTextureFromImage(Poggers);
 
-	Image Poggers_menu = LoadImage("panda_poggers.png");
+	Image Poggers_menu = LoadImage("Graphics/panda_poggers.png");
 	ImageResize(&Poggers_menu, 300, 300);
 	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
 
@@ -242,10 +242,10 @@ int main()
 	// Initialize audio device
 	InitAudioDevice();      
 
-	Sound fx_Pong = LoadSound("pong.wav"); 
-	Sound fx_Score = LoadSound("score.wav");
-	Sound fx_Button = LoadSound("button.wav");
-	Sound fx_Pog = LoadSound("pog.wav");
+	Sound fx_Pong = LoadSound("Sounds/pong.wav"); 
+	Sound fx_Score = LoadSound("Sounds/score.wav");
+	Sound fx_Button = LoadSound("Sounds/button.wav");
+	Sound fx_Pog = LoadSound("Sounds/pog.wav");
 
 	//Menu on/off
 	bool isInMenu = true;
