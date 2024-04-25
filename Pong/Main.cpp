@@ -233,11 +233,11 @@ int main()
 	ball.Reset();
 
 	//loading textures
-	Image Poggers = LoadImage("Graphics/panda_poggers.png");
+	Image Poggers = LoadImage("panda_poggers.png");
 	ImageResize(&Poggers, 50, 50);
 	Texture2D texture = LoadTextureFromImage(Poggers);
 
-	Image Poggers_menu = LoadImage("Graphics/panda_poggers.png");
+	Image Poggers_menu = LoadImage("panda_poggers.png");
 	ImageResize(&Poggers_menu, 300, 300);
 	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
 
@@ -263,10 +263,10 @@ int main()
 	int multiplayer_state = 0; // 0 normal, 1 hover
 	bool multiplayer_action = false;
 
-	Rectangle play_bounds = { (screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height };
-	Rectangle pog_bounds = { (screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height };
-	Rectangle reset_bounds = { (screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height };
-	Rectangle multiplayer_bounds = { (screen_width - button_width) / 2, 5 * (screen_height - button_height) / 6, button_width, button_height };
+	Rectangle play_bounds = { (float(GetScreenWidth()) - button_width) / 2, (float(GetScreenHeight()) - button_height) / 3, button_width, button_height };
+	Rectangle pog_bounds = { (float(GetScreenWidth()) - button_width) / 2, (float(GetScreenHeight()) - button_height) / 2, button_width, button_height };
+	Rectangle reset_bounds = { (float(GetScreenWidth()) - button_width) / 2, 2 * (float(GetScreenHeight()) - button_height) / 3, button_width, button_height };
+	Rectangle multiplayer_bounds = { (float(GetScreenWidth()) - button_width) / 2, 5 * (float(GetScreenHeight()) - button_height) / 6, button_width, button_height };
 
 	//varible to track mouse location for buttons
 	Vector2  mousePoint = { 0.0f,0.0f };
