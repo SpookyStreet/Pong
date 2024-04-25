@@ -230,11 +230,11 @@ int main()
 	ball.Reset();
 
 	//loading textures
-	Image Poggers = LoadImage("Poggers.png");
+	Image Poggers = LoadImage("panda_poggers.png");
 	ImageResize(&Poggers, 50, 50);
 	Texture2D texture = LoadTextureFromImage(Poggers);
 
-	Image Poggers_menu = LoadImage("Poggers.png");
+	Image Poggers_menu = LoadImage("panda_poggers.png");
 	ImageResize(&Poggers_menu, 300, 300);
 	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
 
