@@ -223,7 +223,7 @@ int main()
 	Paddle_Player_2 player_2(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, paddle_speed);
 
 	//creating window
-	InitWindow(screen_width, screen_height, "Pong");
+	InitWindow(screen_width, screen_height, "Ponggers Brother!!");
 	SetTargetFPS(60); // game to run at 60 FPS
 
 	//randomises ball starting direction
@@ -238,6 +238,7 @@ int main()
 	ImageResize(&Poggers_menu, 300, 300);
 	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
 
+	SetWindowIcon(Poggers);
 	// Initialize audio device
 	InitAudioDevice();      
 
