@@ -422,7 +422,7 @@ int main()
 			DrawText("Player 1 keys: up & down", screen_width - 300, screen_height - 80, 20, WHITE);
 			DrawText("Player 2 keys: w & s", screen_width - 300, screen_height - 40, 20, WHITE);
 			
-			//Buttons 
+			//Buttons (potential improvement: add a button class with subclasses for each button (decided to finish project and keep this in mind for next time)) 
 			//play button
 			if (play_state)//play state button and text with changing colour when hovered
 			{
