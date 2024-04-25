@@ -18,14 +18,14 @@ public:// public variables
 	float speed_x, speed_y; //ball speeds
 	int radius; //size of ball
 	int speed_choices[2] = { -1,1 }; //array for random initial direction
-	float speed_y_bounce[2] = { 1,1.1 }; //on paddle bounce the ball's y speed is multiplied by one of these values at random 
-	float speed_x_bounce = 1.1; // on paddle bounce the ball's x speed is multiplied by this value 
+	float speed_y_bounce[2] = { 1.0f,1.015f }; //on paddle bounce the ball's y speed is multiplied by one of these values at random. used as tool to balance cpu difficulty greater difference in y speed, harder to match
+	float speed_x_bounce = -1.1f; // on paddle bounce the ball's x speed is multiplied by this value 
 	float init_speed_x;// store initial speed for reset
 	float init_speed_y;// store initial speed for reset
 	float rotation = 0;//starting rotation of texture
 	int rotation_speed;//speed at which the texture can rotate
 	int rotation_speed_init;
-	float rotation_multiply [6] = { -0.9,-1,-1.1,0.9,1,1.1 };//on collision the rotation speed is randomly multiplied with one of these values
+	float rotation_multiply [6] = { -0.9f,-1.0f,-1.1f,0.9f,1.0f,1.1f };//on collision the rotation speed is randomly multiplied with one of these values
 
 public: // public methods
 
@@ -117,7 +117,7 @@ protected:
 public:
 	void Draw() // draws paddle to window
 	{
-		DrawRectangleRounded(Rectangle{x,y,float(width),float(height)},0.6,10,WHITE);
+		DrawRectangleRounded(Rectangle{x,y,float(width),float(height)},0.6f,10,WHITE);
 	}
 
 	void Update() // updates paddles new position 
@@ -505,8 +505,8 @@ int main()
 			//Check for collision ball and player
 			if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player.x,player.y,float(player.width),float(player.height) }))
 			{
-				ball.speed_x *= -1.1f;
-				//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+				ball.speed_x *= ball.speed_x_bounce; // reflection on hit, also increases x speed 
+				ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 				ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 				PlaySound(fx_Pong);
 			}
@@ -516,8 +516,8 @@ int main()
 				//Check for collision ball and cpu
 				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ cpu.x,cpu.y,float(cpu.width),float(cpu.height) }))
 				{
-					ball.speed_x *= -1.1f;
-					//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+					ball.speed_x *= ball.speed_x_bounce;
+					ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 					ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 					PlaySound(fx_Pong);
 
@@ -528,8 +528,8 @@ int main()
 				//Check for collision ball and player_2
 				if (CheckCollisionCircleRec(Vector2{ ball.x,ball.y }, ball.radius, Rectangle{ player_2.x,player_2.y,float(player_2.width),float(player_2.height) }))
 				{
-					ball.speed_x *= -1.1f;
-					//ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
+					ball.speed_x *= ball.speed_x_bounce;
+					ball.speed_y *= ball.speed_y_bounce[GetRandomValue(0, 1)];
 					ball.rotation_speed *= ball.rotation_multiply[GetRandomValue(0, 5)];
 					PlaySound(fx_Pong);
 
