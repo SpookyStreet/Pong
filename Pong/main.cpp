@@ -11,30 +11,30 @@ Color Dark_Purple = Color{ 135, 31, 235,255 };
 Color Light_Purple = Color{ 180, 150, 235,255 };
 Color Yellow = Color{255,255,0, 255};
 
-// class to store methods and member varibles for the ball
+// class to store methods and member variables for the ball
 class Ball {
 public:// public variables 
 	float x, y; // ball position
 	float speed_x, speed_y; //ball speeds
 	int radius; //size of ball
 	int speed_choices[2] = { -1,1 }; //array for random initial direction
-	float speed_y_bounce[2] = { 1,1.1 };
-	float init_speed_x;
-	float init_speed_y;
-	float rotation;
-	int rotation_speed;
-	float rotation_multiply [6] = { -0.9,-1,-1.1,0.9,1,1.1 };
+	float speed_y_bounce[2] = { 1,1.1 }; //on paddle bounce the ball's y speed is multiplied by one of these values at random 
+	float speed_x_bounce = 1.1; // on paddle bounce the ball's x speed is multiplied by this value 
+	float init_speed_x;// store initial speed for reset
+	float init_speed_y;// store initial speed for reset
+	float rotation = 0;//starting rotation of texture
+	int rotation_speed;//speed at which the texture can rotate
+	int rotation_speed_init;
+	float rotation_multiply [6] = { -0.9,-1,-1.1,0.9,1,1.1 };//on collision the rotation speed is randomly multiplied with one of these values
 
 public: // public methods
 
 	void Draw(Texture texture,bool pog_on_off) 
 	{
-		Vector2 pos = { x-25,y-25}; // maps texture to the centre of the ball
 		if (pog_on_off)
 		{
-			
-			DrawTexturePro(texture, { 0,0,50,50},{x,y,50,50},{25,25}, rotation, RAYWHITE);//Draws texture to window
-			//DrawCircle(x, y, radius, WHITE);//test image location relative to hitbox
+			DrawTexturePro(texture, { 0,0,50,50},{x,y,50,50},{25,25}, rotation, RAYWHITE);//Draws texture to window, origin on centre of ball, rotation around origin
+			//DrawCircle(x, y, radius, WHITE);//test texture location relative to ball hitbox
 		}
 		else 
 		{
@@ -45,23 +45,23 @@ public: // public methods
 	void Update(Sound score) { // updates balls position based on speed, takes sound input 
 		x += speed_x;
 		y += speed_y;
-		rotation += rotation_speed;
+		rotation += rotation_speed; //rotation increases by speed of rotation
 
-		if (y + radius >= GetScreenHeight() || y - radius <= 0) //bouncing off walls
+		if (y + radius >= GetScreenHeight() || y - radius <= 0) //bouncing off top and bottom walls
 		{
 			speed_y *= -1;
 		}
 
-		if (x + radius >= GetScreenWidth()) //cpu wins
+		if (x + radius >= GetScreenWidth()) //cpu/player_2 wins if ball goes past the right wall 
 		{
-			cpu_score++;
-			PlaySound(score);
-			Reset();
+			cpu_score++; //increase global variable for cpu/player_2 score
+			PlaySound(score); //plays the sound for a score
+			Reset(); //resets the ball
 		}
 		
-		if (x - radius <= 0 ) // player wins
+		if (x - radius <= 0 ) // player wins if the ball goes off the left wall
 		{
-			player_score++;
+			player_score++;//increase global variable for player score
 			PlaySound(score);
 			Reset();
 		}
@@ -78,11 +78,11 @@ public: // public methods
 		speed_x *= speed_choices[GetRandomValue(0, 1)];
 		speed_y *= speed_choices[GetRandomValue(0, 1)];
 
-		rotation = 0;
-		rotation_speed = 10;
+		rotation = 0; // resets rotation values 
+		rotation_speed = rotation_speed_init;
 	}
 
-	Ball(float X, float Y, int SPEED_X, int SPEED_Y, int RADIUS) { // constructor for ball class
+	Ball(float X, float Y, int SPEED_X, int SPEED_Y, int RADIUS, int ROTATION_SPEED) { // constructor for ball class
 		x = X;
 		y = Y;
 		speed_x = SPEED_X;
@@ -90,11 +90,10 @@ public: // public methods
 		init_speed_x = SPEED_X;
 		init_speed_y = SPEED_Y;
 		radius = RADIUS;
-		rotation = 0;
-		rotation_speed = 10; // rotation off
+		rotation_speed = ROTATION_SPEED; 
+		rotation_speed_init = ROTATION_SPEED;
 	}
 };
-
 
 class Paddle { //player paddle
 public:
@@ -143,13 +142,11 @@ public:
 	} //default constructor needed for CPU & player_2 subclasses
 
 	Paddle(float X, float Y, int WIDTH, int HEIGHT,int SPEED_Y) { //constructor 
-
 		width = WIDTH;
 		height = HEIGHT;
 		speed_y = SPEED_Y;
 		x = X;
 		y = Y;
-
 	}
 };
 
@@ -157,11 +154,10 @@ class CpuPaddle : public Paddle { // subclass CPU paddle
 public:
 	void Update(float ball_y)  // AI position controls 
 	{
-		if (y + height / 2 > ball_y) // currently tracks ball y position
+		if (y + height / 2 > ball_y) // tracks ball y position
 		{
 			y -= speed_y;
 		}
-		
 		if (y + height / 2 <= ball_y)
 		{
 			y += speed_y;
@@ -170,7 +166,6 @@ public:
 	}
 	
 	CpuPaddle(float X, float Y, int WIDTH, int HEIGHT, int SPEED_Y) {
-
 		width = WIDTH;
 		height = HEIGHT;
 		speed_y = SPEED_Y;
@@ -219,9 +214,10 @@ int main()
 	const int paddle_offset = 10;
 	const int paddle_speed = 8;
 	const int paddle_speed_cpu = 8;
+	const int rotation_speed = 10;
 
 	//constructing game objects
-	Ball ball(screen_width / 2, screen_height / 2, ball_speed_x, ball_speed_y, ball_radius);
+	Ball ball(screen_width / 2, screen_height / 2, ball_speed_x, ball_speed_y, ball_radius, rotation_speed);
 	Paddle player(screen_width - paddle_offset - paddle_width,screen_height/2 - paddle_height/2,paddle_width,paddle_height,paddle_speed);
 	CpuPaddle cpu(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, paddle_speed_cpu);
 	Paddle_Player_2 player_2(paddle_offset, screen_height / 2 - paddle_height / 2, paddle_width, paddle_height, paddle_speed);
@@ -233,6 +229,7 @@ int main()
 	//randomises ball starting direction
 	ball.Reset();
 
+	//loading textures
 	Image Poggers = LoadImage("Poggers.png");
 	ImageResize(&Poggers, 50, 50);
 	Texture2D texture = LoadTextureFromImage(Poggers);
@@ -241,16 +238,18 @@ int main()
 	ImageResize(&Poggers_menu, 300, 300);
 	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
 
-	InitAudioDevice();      // Initialize audio device
+	// Initialize audio device
+	InitAudioDevice();      
 
-	Sound fx_Pong = LoadSound("pong.wav"); // loads sound
+	Sound fx_Pong = LoadSound("pong.wav"); 
 	Sound fx_Score = LoadSound("score.wav");
 	Sound fx_Button = LoadSound("button.wav");
 	Sound fx_Pog = LoadSound("pog.wav");
 
-	//menu
+	//Menu on/off
 	bool isInMenu = true;
-	
+
+	//varibles for menu buttons
 	int button_height = 100;
 	int button_width = 400;
 	int play_state = 0; // 0 normal, 1 hover
@@ -262,55 +261,58 @@ int main()
 	int multiplayer_state = 0; // 0 normal, 1 hover
 	bool multiplayer_action = false;
 
-	bool pog_on = false;
-	
-	bool multiplayer_off = true;
-
 	Rectangle play_bounds = { (screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height };
 	Rectangle pog_bounds = { (screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height };
 	Rectangle reset_bounds = { (screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height };
 	Rectangle multiplayer_bounds = { (screen_width - button_width) / 2, 5 * (screen_height - button_height) / 6, button_width, button_height };
 
+	//varible to track mouse location for buttons
 	Vector2  mousePoint = { 0.0f,0.0f };
+
+	//poggers state on/off
+	bool pog_on = false;
+
+	//multiplayer on/off
+	bool multiplayer_off = true;
 
 	// game loop
 	while (WindowShouldClose() == false) 
 	{
-		
-		mousePoint = GetMousePosition();
+		mousePoint = GetMousePosition(); //gets mouse position 
+		//reseting button states	
 		bool play_action = false;
 		bool pog_action = false;
 		bool reset_action = false;
 		bool multiplayer_action = false;
 
 		//play button
-		if (CheckCollisionPointRec(mousePoint, play_bounds))
+		if (CheckCollisionPointRec(mousePoint, play_bounds))// is the mouse over the play button
 		{
-			play_state = 1;
+			play_state = 1;//changes look of button
 
-			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
-				play_action = true;
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {//mouse clicked on button
+				play_action = true;//triggers what the button does
 			}
 		}
 		else
 		{
-			play_state = 0;
+			play_state = 0;//mouse not over button
 		}
 
-		if (play_action) 
+		if (play_action) //activates when play button pressed
 		{
 			PlaySound(fx_Button);
-			isInMenu = false;
+			isInMenu = false; //switches from menu to game
 		}
 
 		// poggers button
-		if (CheckCollisionPointRec(mousePoint, pog_bounds))
+		if (CheckCollisionPointRec(mousePoint, pog_bounds))// is the mouse over the poggers button
 		{
 			pog_state = 1;
 
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) 
 			{
-				pog_action = true;
+				pog_action = true;//triggers what the button does
 				
 			}
 		}
@@ -319,9 +321,10 @@ int main()
 			pog_state = 0;
 		}
 
-		if (pog_action)
+		if (pog_action)//activates when poggers button pressed
 		{
-			if (pog_on) {
+			if (pog_on) {//toggles poggers state
+				PlaySound(fx_Button);
 				pog_on = false;
 			}
 			else{
@@ -337,7 +340,6 @@ int main()
 
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
 				reset_action = true;
-
 			}
 		}
 		else
@@ -345,7 +347,7 @@ int main()
 			reset_state = 0;
 		}
 
-		if (reset_action)
+		if (reset_action)//activates when reset button pressed, resets scores, object locations, poggers state
 		{
 			PlaySound(fx_Button);
 			player_score = 0;
@@ -365,7 +367,6 @@ int main()
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 			{
 				multiplayer_action = true;
-
 			}
 		}
 		else
@@ -373,7 +374,7 @@ int main()
 			multiplayer_state = 0;
 		}
 
-		if (multiplayer_action)
+		if (multiplayer_action)// activates when multiplayer pressed, resets scores, object locations, toggles between multiplayer and cpu opponent
 		{
 			player_score = 0;
 			cpu_score = 0;
@@ -389,11 +390,10 @@ int main()
 				multiplayer_off = true;
 				player.y = (screen_height - player.height) / 2;
 				cpu.y = (screen_height - cpu.height) / 2;
-
 			}
 		}
 
-		//menu return
+		//menu toggle with space bar
 		if (isInMenu)
 		{
 			if (IsKeyPressed(KEY_SPACE)) {
@@ -407,9 +407,10 @@ int main()
 			}
 		}
 
+		//begins drawing
 		BeginDrawing();	
 		
-		if (isInMenu) 
+		if (isInMenu) //if in menu
 		{
 			//drawing menu assets 
 			ClearBackground(Dark_Purple);
@@ -422,79 +423,78 @@ int main()
 			DrawText("Player 2 keys: w & s", screen_width - 300, screen_height - 40, 20, WHITE);
 			
 			//Buttons 
-			if (play_state)
+			//play button
+			if (play_state)//play state button and text with changing colour when hovered
 			{
 				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height, BLACK);
-				DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 + 10, 80, Purple);
 			}
 			else
 			{
 				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 3, button_width, button_height, WHITE);
-				DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 + 10, 80, Purple);
 			}
+			DrawText("Play!", (screen_width - MeasureText("Play!", 80)) / 2, (screen_height - button_height) / 3 + 10, 80, Purple);
 
+			//poggers button
 			if (pog_state)
 			{
 				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height, BLACK);
-				DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
 			}
 			else 
 			{
 				DrawRectangle((screen_width - button_width) / 2, (screen_height - button_height) / 2, button_width, button_height, WHITE);
-				DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
 			}
+			DrawText("Poggers!", (screen_width - MeasureText("Poggers!", 80)) / 2, (screen_height - button_height) / 2 + 10, 80, Purple);
 
+			//reset button
 			if (reset_state)
 			{
 				DrawRectangle((screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height, BLACK);
-				DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2 * (screen_height - button_height) / 3 + 10, 80, Purple);
 			}
 			else
 			{
 				DrawRectangle((screen_width - button_width) / 2, 2 * (screen_height - button_height) / 3, button_width, button_height, WHITE);
-				DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2 * (screen_height - button_height) / 3 + 10, 80, Purple);
 			}
+			DrawText("Reset", (screen_width - MeasureText("Reset", 80)) / 2, 2 * (screen_height - button_height) / 3 + 10, 80, Purple);
+			
+			//multiplayer/cpu button
 			if (multiplayer_off) {
 				if (multiplayer_state)
 				{
 					DrawRectangle((screen_width - button_width) / 2, 5 * (screen_height - button_height) / 6, button_width, button_height, BLACK);
-					DrawText("2 Player", (screen_width - MeasureText("2 Player", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 				}
 				else
 				{
 					DrawRectangle((screen_width - button_width) / 2, 5 * (screen_height - button_height) / 6, button_width, button_height, WHITE);
-					DrawText("2 Player", (screen_width - MeasureText("2 Player", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 				}
+				DrawText("2 Player", (screen_width - MeasureText("2 Player", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 			}
 			else {
 				if (multiplayer_state)
 				{
 					DrawRectangle((screen_width - button_width) / 2, 5 * (screen_height - button_height) / 6, button_width, button_height, BLACK);
-					DrawText("CPU", (screen_width - MeasureText("CPU", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 				}
 				else
 				{
 					DrawRectangle((screen_width - button_width) / 2, 5 * (screen_height - button_height) / 6, button_width, button_height, WHITE);
-					DrawText("CPU", (screen_width - MeasureText("CPU", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 				}
+				DrawText("CPU", (screen_width - MeasureText("CPU", 80)) / 2, 5 * (screen_height - button_height) / 6 + 10, 80, Purple);
 			}
+			
+			//displays poggers image if poggers state is on 
 			if (pog_on) {
-
 				DrawTexture(texture_menu, 5 * screen_width / 6 - 150, screen_height / 2 - 150, WHITE);
 				if (!multiplayer_off) {
 					DrawTexture(texture_menu, screen_width / 6 - 150, screen_height / 2 - 150, WHITE);
 				}
 			}
-
-
 		}
-		else
+		else// playing the game, not in menu
 		{
 			//Updating positions
 			ball.Update(fx_Score);
 			player.Update();
-
-			if (multiplayer_off) {
+			if (multiplayer_off)// cpu playing or player 2 
+			{
 				cpu.Update(ball.y);
 			}
 			else
@@ -536,18 +536,21 @@ int main()
 				}
 			}
 
-			//Drawing game objects
+			//Drawing background
 			ClearBackground(Dark_Purple);
 			DrawRectangle(screen_width / 2, 0, screen_width / 2, screen_height, Purple);
 			DrawCircle(screen_width / 2, screen_height / 2, 150, Light_Purple);
 			DrawLine(screen_width / 2, 0, screen_width / 2, screen_height, WHITE);
+			
+			//Drawing UI
 			DrawText(TextFormat("%i", cpu_score), screen_width / 4 - 20, 20, 80, WHITE);
 			DrawText(TextFormat("%i", player_score), 3 * screen_width / 4 - 20, 20, 80, WHITE);
 
+			//Drawing objects
 			ball.Draw(texture, pog_on);
 			player.Draw();
-				
-			if (multiplayer_off) {
+			if (multiplayer_off) // cpu or player 2 
+			{
 				cpu.Draw();
 			}
 			else
@@ -555,7 +558,7 @@ int main()
 				player_2.Draw();
 			}
 		}
-		//DrawFPS(10, 10); //displays FPS 
+		//DrawFPS(10, 10); //displays FPS to test
 		EndDrawing();
 	}
 	CloseWindow();
