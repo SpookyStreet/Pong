@@ -202,15 +202,15 @@ public:
 int main()
 {
 	// variables for window size 
-	const int screen_width = 1280; 
-	const int screen_height = 800;
+	const float screen_width = 1280; //changed to float to avoid errors when compiling for html as is divided by 2 in places
+	const float screen_height = 800;
 	
 	//parameters of game 
 	const int ball_radius = 15;
 	const float ball_speed_x = 10.0f;
 	const float ball_speed_y = 9.0f;
-	const int paddle_width = 20;
-	const int paddle_height = 120;
+	const float paddle_width = 20;
+	const float paddle_height = 120;
 	const int paddle_offset = 10;
 	const int paddle_speed = 8;
 	const int paddle_speed_cpu = 8;
@@ -251,8 +251,8 @@ int main()
 	bool isInMenu = true;
 
 	//varibles for menu buttons
-	int button_height = 100;
-	int button_width = 400;
+	float button_height = 100;
+	float button_width = 400;
 	int play_state = 0; // 0 normal, 1 hover
 	bool play_action = false;
 	int pog_state = 0; // 0 normal, 1 hover
