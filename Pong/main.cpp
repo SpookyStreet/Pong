@@ -226,6 +226,9 @@ int main()
 	InitWindow(screen_width, screen_height, "Ponggers Brother!!");
 	SetTargetFPS(60); // game to run at 60 FPS
 
+	// Initialize audio device
+	InitAudioDevice();
+
 	//randomises ball starting direction
 	ball.Reset();
 
@@ -239,9 +242,7 @@ int main()
 	Texture2D texture_menu = LoadTextureFromImage(Poggers_menu);
 
 	SetWindowIcon(Poggers);
-	// Initialize audio device
-	InitAudioDevice();      
-
+  
 	Sound fx_Pong = LoadSound("Sounds/pong.wav"); 
 	Sound fx_Score = LoadSound("Sounds/score.wav");
 	Sound fx_Button = LoadSound("Sounds/button.wav");
@@ -281,10 +282,10 @@ int main()
 	{
 		mousePoint = GetMousePosition(); //gets mouse position 
 		//reseting button states	
-		bool play_action = false;
-		bool pog_action = false;
-		bool reset_action = false;
-		bool multiplayer_action = false;
+		play_action = false;
+		pog_action = false;
+		reset_action = false;
+		multiplayer_action = false;
 
 		//play button
 		if (CheckCollisionPointRec(mousePoint, play_bounds))// is the mouse over the play button
